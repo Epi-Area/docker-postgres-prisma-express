@@ -51,6 +51,51 @@ app.post('/api/todos', async (req, res) => {
     }
 });
 
+app.post('/api/todos/complete/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const todo = await prisma.todo.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: {
+                completed: true
+            }
+        });
+        return res.json({
+            success: true,
+            data: todo
+        });
+    }
+    catch (error) {
+        return res.json({
+            success: false,
+            message: error
+        });
+    }
+});
+
+app.post('/api/todos/delete/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const todo = await prisma.todo.delete({
+            where: {
+                id: parseInt(id)
+            }
+        });
+        return res.json({
+            success: true,
+            data: todo
+        });
+    }
+    catch (error) {
+        return res.json({
+            success: false,
+            message: error
+        });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 })
